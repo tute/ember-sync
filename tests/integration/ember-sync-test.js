@@ -201,10 +201,19 @@ test("#find - searches offline/online simultaneously, syncing online into offlin
 });
 
 test("#find - searches offline/online simultaneously, syncing online into offline (with hasMany relationships) and returning a stream of data", function() {
-  inventoryItem = onlineStore.createRecord('inventoryItem', { id: 1, name: "Fender" });
-  cartItem = onlineStore.createRecord('cartItem', { id: 1, price: "12" });
-  inventoryItem.get('cartItems').pushObject(cartItem);
-  equal(inventoryItem.get('cartItems.length'), 1, "inventory has 1 cart item");
+  fixture = JSON.stringify({
+    inventoryItem: {
+      records: { // this schema is how LSAdapter works
+        1: { id: 1, name: "Fender", cartItems:[1] }
+      }
+    },
+    cartItem: {
+      records: {
+        1: { id: 1, price: 12 }
+      }
+    }
+  });
+  localStorage.setItem('onlineStore', fixture);
 
   stop();
 
